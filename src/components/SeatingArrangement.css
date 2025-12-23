@@ -1,0 +1,167 @@
+.seating-arrangement {
+  font-family: Arial, sans-serif;
+  width: 297mm;
+  min-height: 210mm;
+  margin: 0 auto;
+  padding: 10mm;
+  box-sizing: border-box;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.controls input,
+.controls select {
+  margin-left: 10px;
+}
+
+.classroom {
+  margin-bottom: 40px;
+  border: 1px solid #ccc;
+  padding: 10mm;
+}
+
+.header-template {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.college-icon {
+  width: 20mm;
+  height: auto;
+  margin-right: 10mm;
+}
+
+.header-text {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.header-text h1 {
+  font-size: 16pt;
+  margin: 0 0 5px 0;
+}
+
+.header-text h2 {
+  font-size: 14pt;
+  margin: 0 0 5px 0;
+}
+
+.header-text h3 {
+  font-size: 12pt;
+  margin: 0 0 5px 0;
+}
+
+.header-text p {
+  font-size: 10pt;
+  margin: 0 0 5px 0;
+}
+
+.date {
+  font-weight: bold;
+  font-size: 10pt;
+  align-self: flex-start;
+}
+
+.seating-grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.seating-grid th,
+.seating-grid td {
+  border: 2px solid black;
+  padding: 5px;
+  text-align: center;
+  font-size: 9pt;
+}
+
+.seating-grid th {
+  background-color: #f2f2f2;
+}
+
+.register-numbers {
+  font-weight: bold;
+}
+
+.year-info {
+  font-size: 8pt;
+  color: #666;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 0 20mm;
+}
+
+.footer p {
+  font-weight: bold;
+  font-size: 10pt;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 10pt;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.alert {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 10pt;
+}
+
+@media print {
+  .seating-arrangement {
+    width: 297mm;
+    height: 210mm;
+    padding: 0;
+    margin: 0;
+  }
+
+  .controls,
+  button {
+    display: none;
+  }
+
+  .classroom {
+    page-break-after: always;
+    border: none;
+    padding: 10mm;
+  }
+
+  .header-template {
+    margin-bottom: 5mm;
+  }
+
+  .seating-grid {
+    margin-top: 5mm;
+    margin-bottom: 2mm;
+  }
+
+  .footer {
+    margin-top: 2mm;
+  }
+}
