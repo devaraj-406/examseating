@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -10,7 +9,7 @@ import './App.css';
 function App() {
   const [classrooms, setClassrooms] = React.useState([]);
   const [students, setStudents] = React.useState([]);
-  const [hallNumber, setHallNumber] = React.useState('');
+  const [hallNumber] = React.useState(''); // Removed unused setHallNumber
 
   return (
     <Router>
