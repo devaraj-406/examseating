@@ -139,6 +139,8 @@ function SeatingArrangement({ classrooms, students, onToggleClassroom }) {
 
     if (flattenedStudents.length > 0) {
       setAlert(`Not enough seats in all classrooms for all students! ${flattenedStudents.length} students couldn't be seated.`);
+    } else {
+      setAlert('');
     }
 
     setArrangements(seating);
@@ -307,7 +309,7 @@ function SeatingArrangement({ classrooms, students, onToggleClassroom }) {
 
   return (
     <div className="seating-arrangement" style={{ textAlign: 'center' }}>
- <div className="controls">
+      <div className="controls">
         <label>
           Date:
           <input
