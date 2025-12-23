@@ -23,7 +23,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
   });
   const [selectedClassroomForEdit, setSelectedClassroomForEdit] = useState('');
   const [editingClassroom, setEditingClassroom] = useState(null);
-
   const [studentForm, setStudentForm] = useState({
     year: '1st',
     department: 'CSE',
@@ -36,13 +35,11 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
   const [selectedStudentListForEdit, setSelectedStudentListForEdit] = useState('');
   const [editingStudentList, setEditingStudentList] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     const savedStudents = localStorage.getItem('students');
     const savedUploadedFiles = localStorage.getItem('uploadedFiles');
-
     if (savedStudents) setStudents(JSON.parse(savedStudents));
     if (savedUploadedFiles) setUploadedFiles(JSON.parse(savedUploadedFiles));
   }, [setStudents]);
@@ -55,7 +52,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
   const showAlert = (message) => {
     alert(message);
   };
-
 
   const handleClassroomFormChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +72,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
       showAlert("Please select at least one classroom.");
       return;
     }
-
     const newClassrooms = classroomForm.selectedClassrooms
       .filter(classroom => !classrooms.some(c => c.hallNo === classroom))
       .map(classroom => ({
@@ -87,12 +82,10 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
         block: classroom[0],
         isEnabled: true,
       }));
-
     if (newClassrooms.length === 0) {
       showAlert("All selected classrooms already exist.");
       return;
     }
-
     setClassrooms(prev => [...prev, ...newClassrooms]);
     setClassroomForm(prev => ({ ...prev, selectedClassrooms: [] }));
     showAlert("Classrooms added successfully.");
@@ -122,8 +115,7 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
       showAlert("A classroom with this name already exists.");
       return;
     }
-
-    setClassrooms(prev => prev.map(c => 
+    setClassrooms(prev => prev.map(c =>
       c.hallNo === selectedClassroomForEdit ? editingClassroom : c
     ));
     setSelectedClassroomForEdit('');
@@ -166,21 +158,17 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
 
   const addStudent = () => {
     const { inputMode, year, department, startRegister, endRegister, singleRegister } = studentForm;
-
     if (inputMode === 'range') {
       if (!isValidRegisterNumber(startRegister) || !isValidRegisterNumber(endRegister)) {
         showAlert("Register numbers should be digits only (e.g., 15) or one letter followed by digits (e.g., A15).");
         return;
       }
-
       const start = getNumericValue(startRegister);
       const end = getNumericValue(endRegister);
-
       if (start > end) {
         showAlert("Start register number should be less than or equal to end register number.");
         return;
       }
-
       const newStudent = { year: convertToRoman(year), department, startRegister, endRegister };
       setStudents(prev => consolidateRanges([...prev, newStudent]));
       setStudentForm(prev => ({ ...prev, startRegister: '', endRegister: '' }));
@@ -189,20 +177,15 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
         showAlert("Register number should be digits only (e.g., 15) or one letter followed by digits (e.g., A15).");
         return;
       }
-
       const newStudent = { year: convertToRoman(year), department, startRegister: singleRegister, endRegister: singleRegister };
       setStudents(prev => consolidateRanges([...prev, newStudent]));
       setStudentForm(prev => ({ ...prev, singleRegister: '' }));
     }
-
     setStudentForm(prev => ({ ...prev, year: '1st', department: 'CSE' }));
     showAlert("Student(s) added successfully.");
   };
 
-  const deleteStudent = (index) => {
-    setStudents(prev => prev.filter((_, i) => i !== index));
-    showAlert("Student deleted successfully.");
-  };
+  // Removed unused deleteStudent function here
 
   const deleteRegisterFromRange = (index) => {
     const { deleteRegister } = studentForm;
@@ -210,35 +193,31 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
       showAlert("Invalid register number format.");
       return;
     }
-
     const updatedStudents = [...students];
     const student = updatedStudents[index];
     const registerToDelete = getNumericValue(deleteRegister);
     const start = getNumericValue(student.startRegister);
     const end = getNumericValue(student.endRegister);
-
     if (registerToDelete < start || registerToDelete > end) {
       showAlert("Register number is not within the specified range.");
       return;
     }
-
     if (registerToDelete === start && registerToDelete === end) {
       updatedStudents.splice(index, 1);
     } else if (registerToDelete === start) {
-      student.startRegister = (start + 1).toString().padStart(student.startRegister.length, '0');
+      student.startRegister = (start + 1).toString().padStart(student.startRegister.length - (start.toString().length), '0');
     } else if (registerToDelete === end) {
-      student.endRegister = (end - 1).toString().padStart(student.endRegister.length, '0');
+      student.endRegister = (end - 1).toString().padStart(student.endRegister.length - (end.toString().length), '0');
     } else {
       const newStudent = {
         year: student.year,
         department: student.department,
-        startRegister: (registerToDelete + 1).toString().padStart(student.startRegister.length, '0'),
+        startRegister: (registerToDelete + 1).toString().padStart(3, '0'),
         endRegister: student.endRegister
       };
-      student.endRegister = (registerToDelete - 1).toString().padStart(student.endRegister.length, '0');
+      student.endRegister = (registerToDelete - 1).toString().padStart(3, '0');
       updatedStudents.splice(index + 1, 0, newStudent);
     }
-
     setStudents(updatedStudents);
     setStudentForm(prev => ({ ...prev, deleteRegister: '' }));
     showAlert("Register number deleted successfully.");
@@ -250,7 +229,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
       showAlert("This file has already been uploaded.");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target.result;
@@ -263,20 +241,18 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
             console.warn(`Skipping invalid line: ${line}`);
             return null;
           }
-          return { 
-            year: convertToRoman(year), 
-            department, 
-            startRegister: register, 
-            endRegister: register 
+          return {
+            year: convertToRoman(year),
+            department,
+            startRegister: register,
+            endRegister: register
           };
         })
         .filter(student => student !== null);
-
       if (newStudents.length === 0) {
         showAlert("No valid student data found in the uploaded file.");
         return;
       }
-
       setStudents(prev => consolidateRanges([...prev, ...newStudents]));
       setUploadedFiles(prev => [...prev, file.name]);
       showAlert("Student data uploaded successfully.");
@@ -295,7 +271,7 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
   return (
     <div className="classroom-student-form">
       <h2>Classroom and Student Management</h2>
-      
+     
       {/* Classroom Form */}
       <div className="form-section">
         <h3>Add Classrooms</h3>
@@ -349,8 +325,8 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           {classroomForm.selectedBlock && classroomsPerBlock[classroomForm.selectedBlock] && (
             <div className="classroom-list">
               {classroomsPerBlock[classroomForm.selectedBlock].map(classroom => (
-                <div 
-                  key={classroom} 
+                <div
+                  key={classroom}
                   className={`classroom-item ${classroomForm.selectedClassrooms.includes(classroom) ? 'selected' : ''}`}
                   onClick={() => handleClassroomToggle(classroom)}
                 >
@@ -362,9 +338,8 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           )}
         </div>
         <button onClick={addClassrooms} className="form-button">Add Selected Classrooms</button>
-        </div>
-
-     
+      </div>
+    
       <div className="list-section">
         <h3>Classroom List</h3>
         <select
@@ -425,7 +400,7 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           </div>
         )}
         {selectedClassroomForEdit && (
-          <button 
+          <button
             onClick={() => deleteClassroom(selectedClassroomForEdit)}
             className="action-button delete"
           >
@@ -433,14 +408,13 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           </button>
         )}
       </div>
-
-   
+  
       <div className="form-section">
         <h3>Add Student</h3>
         <div className="form-controls">
-          <select 
+          <select
             name="year"
-            value={studentForm.year} 
+            value={studentForm.year}
             onChange={handleStudentFormChange}
             className="form-select"
           >
@@ -448,7 +422,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
               <option key={option} value={option}>{option} Year</option>
             ))}
           </select>
-
           <select
             name="department"
             value={studentForm.department}
@@ -459,7 +432,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
               <option key={option} value={option}>{option}</option>
             ))}
           </select>
-
           <select
             name="inputMode"
             value={studentForm.inputMode}
@@ -469,7 +441,6 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
             <option value="range">Range</option>
             <option value="single">Single</option>
           </select>
-
           {studentForm.inputMode === 'range' ? (
             <>
               <input
@@ -512,15 +483,14 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           </button>
         </div>
       </div>
-
-    
+   
       <div className="list-section">
         <h3>Student Lists</h3>
         <select
           value={selectedStudentListForEdit}
           onChange={(e) => {
             setSelectedStudentListForEdit(e.target.value);
-            const studentList = students.filter(student => 
+            const studentList = students.filter(student =>
               uploadedFiles.includes(e.target.value)
             );
             if (studentList.length > 0) {
@@ -562,7 +532,7 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
             </ul>
             <button onClick={() => {
               setStudents(prev => {
-                const filteredPrev = prev.filter(student => 
+                const filteredPrev = prev.filter(student =>
                   !uploadedFiles.includes(selectedStudentListForEdit)
                 );
                 return [...filteredPrev, ...editingStudentList];
@@ -573,7 +543,7 @@ function ClassroomStudentForm({ classrooms, setClassrooms, students, setStudents
           </div>
         )}
         {selectedStudentListForEdit && (
-          <button 
+          <button
             onClick={() => deleteStudentList(selectedStudentListForEdit)}
             className="action-button delete"
           >
